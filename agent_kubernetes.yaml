@@ -12,7 +12,7 @@ spec:
     securityContext:
       privileged: true
     volumeMounts:
-      - name: varlibcontainers
-mountPath: /var/lib/containers
+    - name: varlibcontainers
+      mountPath: /var/lib/containers
   volumes:
     - name: varlibcontainers
