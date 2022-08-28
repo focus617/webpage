@@ -1,8 +1,7 @@
 FROM docker.io/alpine:latest
 
-RUN apk update && apk upgrade
-
-RUN apk add --update lighttpd
+RUN apk update && apk add --update lighttpd \
+        && rm -rf /var/cache/apk/*
 
 COPY ./conf/* /etc/lighttpd/
 
