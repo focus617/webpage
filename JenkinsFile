@@ -14,12 +14,16 @@ pipeline {
     BUILD_TAG='latest'
   }
   stages {
+    stage('Retrieve Git Tag') {
+      steps {
+        script {
+          env.BUILD_TAG = sh (script:'git rev-parse --short HEAD', returnStdout: true).trim()
+        }
+      }
+    }
     stage('Build with Buildah') {
       steps {
         container('buildah') {
-          script {
-            env.BUILD_TAG = sh (script:'git rev-parse --short HEAD', returnStdout: true).trim()
-          }
           sh 'buildah build -t focus617xu/jenkins-buildah-example:1.0.0 .'
         }
       }
