@@ -17,9 +17,8 @@ pipeline {
     stage('Retrieve Git Tag') {
       steps {
         script {
-          def tag = sh(script:'git rev-parse --short HEAD', returnStdout: true).trim()
-          sh 'echo ${tag}'
-          withEnv(["BUILD_TAG=tag"]) { sh 'echo Tag=${BUILD_TAG}' }
+          withEnv(["BUILD_TAG=sh(script:'git rev-parse --short HEAD', returnStdout: true)"])
+          sh 'echo Tag=${BUILD_TAG}'
         }
       }
     }
