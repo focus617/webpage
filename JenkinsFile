@@ -19,7 +19,7 @@ pipeline {
         script {
           def pom = sh(script:'git rev-parse --short HEAD', returnStdout: true)
           BUILD_TAG = pom
-          sh "echo pom=${pom}, Tag=${BUILD_TAG}"
+          sh "echo Build_Tag=${BUILD_TAG}"
         }
       }
     }
