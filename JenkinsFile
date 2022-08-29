@@ -18,6 +18,7 @@ pipeline {
       steps {
         script {
           env.BUILD_TAG = sh (script:'git rev-parse --short HEAD', returnStdout: true).trim()
+          sh 'echo Tag=${BUILD_TAG}'
         }
       }
     }
