@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: focus617xu/jenkins-buildah-example:latest
+        image: focus617xu/jenkins-buildah-example:<TAG>
         imagePullPolicy: Always
         resources:
           limits:

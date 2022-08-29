@@ -11,6 +11,7 @@ pipeline {
   }
   environment {
     DH_CREDS=credentials('dh-creds')
+    BUILD_TAG='latest'
   }
   stages {
     stage('Build with Buildah') {
@@ -30,14 +31,14 @@ pipeline {
     stage('Tag image') {
       steps {
         container('buildah') {
-          sh 'buildah tag focus617xu/jenkins-buildah-example:1.0 focus617xu/jenkins-buildah-example:latest'
+          sh 'buildah tag focus617xu/jenkins-buildah-example:1.0 focus617xu/jenkins-buildah-example:${BUILD_TAG}'
         }
       }
     }
     stage('Push image into Dockerhub') {
       steps {
         container('buildah') {
-          sh 'buildah push focus617xu/jenkins-buildah-example:latest'
+          sh 'buildah push focus617xu/jenkins-buildah-example:${BUILD_TAG}'
         }
       }
     }
@@ -45,6 +46,7 @@ pipeline {
       steps {
         container('kubectl') {
           withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
+            sh 'sed -i "s/<TAG>/${BUILD_TAG}/" myapp.yaml'
             sh 'kubectl apply -f myapp.yaml'
           }
         }
