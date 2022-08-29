@@ -41,14 +41,14 @@ pipeline {
     stage('Tag image') {
       steps {
         container('buildah') {
-          sh "buildah tag jenkins-buildah-example focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
+          sh "buildah tag jenkins-buildah-example ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }
     stage('Push image into Dockerhub') {
       steps {
         container('buildah') {
-          sh "buildah push focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
+          sh "buildah push ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }
@@ -56,6 +56,7 @@ pipeline {
       steps {
         container('kubectl') {
           withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
+            sh """sed -i "s/<REPOS>/${LOCAL_REPOS}/" myapp.yaml"""
             sh """sed -i "s/<TAG>/1.0.0-${BUILD_TAG}/" myapp.yaml"""
             sh 'kubectl apply -f myapp.yaml'
           }
