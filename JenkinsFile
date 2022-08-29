@@ -11,43 +11,46 @@ pipeline {
   }
   environment {
     DH_CREDS=credentials('dh-creds')
-    BUILD_TAG='latest'
   }
   stages {
-    stage('Build with Buildah') {
-      steps {
-        container('buildah') {
-          sh 'buildah build -t focus617xu/jenkins-buildah-example:1.0 .'
+    script {
+      def BUILD_TAG= new Date().format("yyyyMMddHHmmss");
+      
+      stage('Build with Buildah') {
+        steps {
+          container('buildah') {
+            sh 'buildah build -t focus617xu/jenkins-buildah-example:1.0 .'
+          }
         }
       }
-    }
-    stage('Login to Docker Hub') {
-      steps {
-        container('buildah') {
-          sh 'echo $DH_CREDS_PSW | buildah login -u $DH_CREDS_USR --password-stdin docker.io'
+      stage('Login to Docker Hub') {
+        steps {
+          container('buildah') {
+            sh 'echo $DH_CREDS_PSW | buildah login -u $DH_CREDS_USR --password-stdin docker.io'
+          }
         }
       }
-    }
-    stage('Tag image') {
-      steps {
-        container('buildah') {
-          sh 'buildah tag focus617xu/jenkins-buildah-example:1.0 focus617xu/jenkins-buildah-example:${BUILD_TAG}'
+      stage('Tag image') {
+        steps {
+          container('buildah') {
+            sh 'buildah tag focus617xu/jenkins-buildah-example:1.0 focus617xu/jenkins-buildah-example:${BUILD_TAG}'
+          }
         }
       }
-    }
-    stage('Push image into Dockerhub') {
-      steps {
-        container('buildah') {
-          sh 'buildah push focus617xu/jenkins-buildah-example:${BUILD_TAG}'
+      stage('Push image into Dockerhub') {
+        steps {
+          container('buildah') {
+            sh 'buildah push focus617xu/jenkins-buildah-example:${BUILD_TAG}'
+          }
         }
       }
-    }
-    stage('Deploy App to Kubernetes') {     
-      steps {
-        container('kubectl') {
-          withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
-            sh 'sed -i "s/<TAG>/${BUILD_TAG}/" myapp.yaml'
-            sh 'kubectl apply -f myapp.yaml'
+      stage('Deploy App to Kubernetes') {     
+        steps {
+          container('kubectl') {
+            withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
+              sh 'sed -i "s/<TAG>/${BUILD_TAG}/" myapp.yaml'
+              sh 'kubectl apply -f myapp.yaml'
+            }
           }
         }
       }
