@@ -40,14 +40,14 @@ pipeline {
     stage('Tag image') {
       steps {
         container('buildah') {
-          sh 'buildah tag focus617xu/jenkins-buildah-example:1.0.0 focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}'
+          sh "buildah tag focus617xu/jenkins-buildah-example:1.0.0 focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }
     stage('Push image into Dockerhub') {
       steps {
         container('buildah') {
-          sh 'buildah push focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}'
+          sh "buildah push focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }
