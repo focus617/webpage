@@ -16,7 +16,7 @@ pipeline {
     stage('Build with Buildah') {
       steps {
         container('buildah') {
-          sh 'buildah build -t focus617xu/jenkins-example-buildah:1.0-220828 .'
+          sh 'buildah build -t focus617xu/jenkins-buildah-example:1.0 .'
         }
       }
     }
@@ -27,18 +27,26 @@ pipeline {
         }
       }
     }
-    stage('tag image') {
+    stage('Tag image') {
       steps {
         container('buildah') {
-          sh 'buildah tag focus617xu/jenkins-example-buildah:1.0-220828 focus617xu/jenkins-example-buildah:latest'
+          sh 'buildah tag focus617xu/jenkins-buildah-example:1.0 focus617xu/jenkins-buildah-example:latest'
         }
       }
     }
-    stage('push image') {
+    stage('Push image into Dockerhub') {
       steps {
         container('buildah') {
-          sh 'buildah push focus617xu/jenkins-example-buildah:1.0-220828'
-          sh 'buildah push focus617xu/jenkins-example-buildah:latest'
+          sh 'buildah push focus617xu/jenkins-buildah-example:latest'
+        }
+      }
+    }
+    stage('Deploy App to Kubernetes') {     
+      steps {
+        container('kubectl') {
+          withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
+            sh 'kubectl apply -f myapp.yaml'
+          }
         }
       }
     }
