@@ -16,17 +16,6 @@ pipeline {
     stage('Build with Buildah') {
       steps {
         container('buildah') {
-          sh 'sudo echo > /etc/apt/sources.list'
-          sh '''sudo cat >> /etc/apt/sources.list <<EOF
-deb http://mirrors.aliyun.com/debian/ stretch main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ stretch main non-free contrib
-deb http://mirrors.aliyun.com/debian-security stretch/updates main
-deb-src http://mirrors.aliyun.com/debian-security stretch/updates main
-deb http://mirrors.aliyun.com/debian/ stretch-updates main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ stretch-updates main non-free contrib
-deb http://mirrors.aliyun.com/debian/ stretch-backports main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ stretch-backports main non-free contrib
-EOF'''
           sh 'buildah build -t focus617xu/jenkins-buildah-example:1.0 .'
         }
       }
