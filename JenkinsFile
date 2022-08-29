@@ -55,7 +55,7 @@ pipeline {
       steps {
         container('kubectl') {
           withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
-            sh 'sed -i "s/<TAG>/1.0.0-${BUILD_TAG}/" myapp.yaml'
+            sh "sed -i 's/<TAG>/1.0.0-\"${BUILD_TAG}\"/' myapp.yaml"
             sh 'kubectl apply -f myapp.yaml'
           }
         }
