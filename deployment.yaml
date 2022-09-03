@@ -50,8 +50,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myapp-ingress
+  namespace: pipeline-deployment
   annotations:
-       nginx.ingress.kubernetes.io/rewrite-target: /$1
+       nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   - host: focus617.com
