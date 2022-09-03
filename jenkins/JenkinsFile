@@ -61,8 +61,9 @@ pipeline {
             // sh """sed -i "s/<REPOS>/${LOCAL_REPOS}/" deployment.yaml"""
             sh """sed -i "s/<REPOS>/focus617xu/" deployment.yaml"""
             sh """sed -i "s/<TAG>/1.0.0-${BUILD_TAG}/" deployment.yaml"""
-            sh 'kubectl apply -f deployment.yaml'
-            sh 'kubectl apply -f ingress-resource.yaml'
+            sh 'kubectl apply -f ./deployment/deployment.yaml'
+            sh 'kubectl create secret tls myapp-secret-tls --cert=./secret/tls.crt --key=./secret/tls.key --namespace pipeline-deployment'
+            sh 'kubectl apply -f ./deployment/ingress-resource.yaml'
           }
         }
       }
