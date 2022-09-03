@@ -39,12 +39,27 @@ metadata:
   name: myapp
   namespace: pipeline-deployment
 spec:
-  type: NodePort
   selector:
     app: myapp
   ports:
-  - nodePort: 31080
-    protocol: TCP
+  - protocol: TCP
     port: 80
     targetPort: 80
-    
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  namespace: pipeline-deployment
+spec:
+  rules:
+  - host: focus617.com
+    http:
+      paths:
+      - path: /web
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp
+            port:
+              number: 80
