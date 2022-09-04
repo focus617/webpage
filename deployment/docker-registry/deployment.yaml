@@ -1,3 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: docker-registry-pv
+spec:
+  storageClassName: docker-registry-pv
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 11Gi
+  hostPath:
+    path: "/data/docker-registry-volume/"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docker-registry-pv-claim
+  namespace: pipeline-deployment
+spec:
+  storageClassName: docker-registry-pv
+  resources:
+    requests:
+      storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,7 +45,7 @@ spec:
     spec:
       containers:
         - name: docker-registry
-          image: registry:2.6.2
+          image: registry:latest
           resources:
             limits:
               memory: "128Mi"
@@ -25,15 +55,22 @@ spec:
               value: ":5000"
             - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
               value: "/var/lib/registry"
+            - name: REGISTRY_HTTP_SECRET 
+              value: myapp-secret-tls
+            - name: REGISTRY_HTTP_TLS_CERTIFICATE
+              value: "/var/lib/registry/cert/tls.crt"
+            - name: REGISTRY_HTTP_TLS_KEY
+              value: "/var/lib/registry/cert/tls.key"              
           ports:
           - name: http
             containerPort: 5000
           volumeMounts:
-          - name: image-store
+          - name: image-store-vol
             mountPath: "/var/lib/registry"
       volumes:
-        - name: image-store
-          emptyDir: {}
+        - name: image-store-vol
+          persistentVolumeClaim: 
+            claimName: docker-registry-pv-claim
 
 ---
 
