@@ -11,7 +11,7 @@ pipeline {
   }
   environment {
     DH_CREDS=credentials('dh-creds')
-    LOCAL_REPOS='192.168.49.1:5000'
+    LOCAL_REPOS='focus617.com/registry'
     BUILD_TAG='latest'
   }
   stages {
@@ -50,7 +50,7 @@ pipeline {
       steps {
         container('buildah') {
           sh "buildah push focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
-          // sh "buildah push ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
+          sh "buildah push ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }
