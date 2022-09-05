@@ -42,7 +42,7 @@ pipeline {
       steps {
         container('buildah') {
           sh "buildah tag jenkins-buildah-example focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
-          sh "buildah tag jenkins-buildah-example ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
+          // sh "buildah tag jenkins-buildah-example ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }
@@ -50,7 +50,7 @@ pipeline {
       steps {
         container('buildah') {
           sh "buildah push focus617xu/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
-          sh "buildah push ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
+          // sh "buildah push ${LOCAL_REPOS}/jenkins-buildah-example:1.0.0-${BUILD_TAG}"
         }
       }
     }

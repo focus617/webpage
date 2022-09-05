@@ -58,9 +58,9 @@ spec:
             - name: REGISTRY_HTTP_SECRET 
               value: myapp-secret-tls
             - name: REGISTRY_HTTP_TLS_CERTIFICATE
-              value: "/var/lib/registry/cert/tls.crt"
+              value: "/var/lib/registry/certs/server-cert.pem"
             - name: REGISTRY_HTTP_TLS_KEY
-              value: "/var/lib/registry/cert/tls.key"              
+              value: "/var/lib/registry/certs/tls.key"              
           ports:
           - name: http
             containerPort: 5000
